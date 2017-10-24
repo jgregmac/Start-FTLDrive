@@ -52,16 +52,3 @@ New search modules need to adhere to the following standards:
           [localProperty2]='[property2]'
         }
   
-### Get-PrivAccountUsage.ps1
-
-Searches the production Yale AD Forest for the use of specific AD User accounts in either Windows service 
-configurations, of in Scheduled Tasks.  At some point this should be converted to a module of Invoke-ServerSearch.ps1
-
-### Scan-SSLv2.ps1
-
-Scans a specified list of computers for the use of SSLv2 protocol.  Relies on the external utility NMap to perform 
-the scans.  This script easily could be updated to scan for SSLv3 and TLS 1.0.
-
-### Get-WinEventLogs.ps1
-
-Collects event logs from a named list of computers using SMB and remote WMI calls.  Adapted from Internet sources.
