@@ -29,8 +29,9 @@ The script currently takes four arguments:
 
 This is intended to be an evloving utility.  In the future, I intend to add more refinements and features:
 
-1. Verbose logging options
-2. More flexible logging options, including custom log names/suffixes and output options (CliXMP, JSON, others?)
+1. Common functions that will be added to the module's script block, possibly used to simplify output. 
+2. Verbose logging options
+3. More flexible logging options, including custom log names/suffixes and output options (CliXML, Excel, others?)
 
 New search modules need to adhere to the following standards:
 
