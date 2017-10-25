@@ -1,4 +1,8 @@
-﻿function Get-MyOrgComputers {
+﻿<#
+    SAMPLE CODE: Add your own named scoped in the "switch ($scope)" section to easily 
+      collect computer objects from different OUs and domains/forests in your environment.
+#>
+function Get-MyOrgComputers {
     [cmdletBinding()]
     param (
         [Parameter(Mandatory=$True)]
@@ -8,30 +12,24 @@
     switch ($scope) {
         prod { 
             [string[]]$computerOUs = @(
-                'OU=WinSys,OU=Information Technology Services,DC=YU,DC=YALE,DC=EDU',
-                'OU=Servers,DC=YU,DC=YALE,DC=EDU',
-                'OU=Exchange Servers,DC=YU,DC=YALE,DC=EDU',
-                'OU=Servers,DC=YU,DC=YALE,DC=EDU'
+                'OU=Servers,DC=NewColonial,DC=GOV',
+                'OU=Exchange Servers,DC=NewColonial,DC=GOV'
             )
-            $dom = "yu.yale.edu"
+            $dom = "newcolonial.gov"
         }
         test { 
             [string[]]$computerOUs = @(
-                'OU=WinSys,OU=Information Technology Services,DC=YU,DC=YALE,DC=NET',
-                'OU=Servers,DC=YU,DC=YALE,DC=NET',
-                'OU=Exchange Servers,DC=YU,DC=YALE,DC=NET',
-                'OU=Servers,DC=YU,DC=YALE,DC=NET'
+                'OU=Servers,DC=NewColonial-Test,DC=GOV',
+                'OU=Exchange Servers,DC=NewColonial-Test,DC=GOV'
             )
-            $dom = "yu.yale.net"
+            $dom = "newcolonial-test.gov"
         }
         dev { 
             [string[]]$computerOUs = @(
-                'OU=WinSys,OU=Information Technology Services,DC=YU,DC=YALE,DC=ORG',
-                'OU=Servers,DC=YU,DC=YALE,DC=ORG',
-                'OU=Exchange Servers,DC=YU,DC=YALE,DC=ORG',
-                'OU=Servers,DC=YU,DC=YALE,DC=ORG'
+                'OU=Servers,DC=NewColonial-Dev,DC=GOV',
+                'OU=Exchange Servers,DC=NewColonial-Dev,DC=GOV'
             )
-            $dom = "yu.yale.org"
+            $dom = "newcolonial-dev.gov"
         }
     }
 

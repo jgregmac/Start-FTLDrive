@@ -3,7 +3,7 @@
     .SYNOPSIS
     This script will start an asynchronous search all servers in the test, dev, or 
     prod forests for "interesting things". Things of interest are defined in 
-    separate scriptblock "module" files, to be stored in the "ServerSearchModules" 
+    separate scriptblock "module" files, to be stored in the "FTLModules"" 
     subdirectory. Output is a CSV file in the format: 
     computer,status,message
 
@@ -17,38 +17,15 @@
     - .\Logs\[ModuleName]-found.csv
     - .\Logs\[ModuleName]-failed.csv
 
-    Currently Supported Modules:
-
-    Name                      State        Function
-    ------                    -------      ----------
-    Find-AccountUsage         Broken       Searches for usage of named service accounts
-
-    Find-IISService           Working      Detects the presence and state of IIS
-
-    Find-SSHHostKeys          Working      Detects the presence of PuTTY SSHHostKeys registry 
-                                        values on all local users.
-
-    Find-SuspectASPFiles      Working      Detects the presense of suspicious content in ASP and 
-                                        ASPX files on servers running IIS.
-
-    Find-SuspectFileNames     Working      Detects the presense of suspicious file names on servers 
-                                        running IIS and Apache
-
-    Get-LocalAdministrators   Working      Enumerates all members of the local Administrators 
-                                        security group
-
-    Get-LocalUsers            Working      Enumerates all active local user accounts
-
-    Restart-HealthService     Partial      Restarts the SCOM Health Service if it is hung.  Success
-                                        reporting may not be working properyly.
-
-    Start-GPUpdate            Working      Forces a GPUpdate on all computers
+    Look in the FTLModules directory for current modules.  Each includes a brief
+    description of its purpose and state.  We are working on adding comment-based help 
+    to each module.
 
     Requires:
     - Remote Server Administration Tools need to be installed on the local 
     machine, with support for the ActiveDirectory PowerShell module enabled, 
     when using the "NamedScope" parameter.
-    - The "ScriptModules" directory needs to be present, and must contain the 
+    - The "SupportModules" directory needs to be present, and must contain the 
     supporting "PSQueue.psm1" and "MyOrgComputers.psm1" script modules.
     - A "Logs" directory needs to be present to host output from the script.
 
@@ -59,11 +36,6 @@
     .PARAMETER Computer
     One or more computer names on which to perform the selected search.  Multiple computer names must 
     be provided as an array of strings.
-
-    .PARAMETER NamedScope
-    Name a scope from which to collect computer objects.  Must be on of 'Test', 'Dev', or 'Prod'.
-    This is a Yale-specific parameter which will collect all managed computers form the matching
-    Active Directory forest.
 
     .PARAMETER ThrottleLimit
     Optional parameter.  Default value is 50 simultaneous PowerShell worker jobs.
@@ -78,11 +50,6 @@
     might need to be increased for some long-running modules, such as Find-EncryptedFiles.
 
     .EXAMPLE
-    C:\PS> .\Invoke-ServerSearch.ps1 -NamedScope prod -Module Get-LocalUsers
-    Runs the Get-LocalUsers search module on all computers in the "Prod" (or 
-    production Active Directory) scope.
-
-    .EXAMPLE
     C:\PS> .\Invoke-ServerSearch.ps1 -Computer 'BobJohnsonsPc' -Module Find-SuspectAspFiles
     Runs the Get-SuspectAspFiles search module on the computer "BobJohnsonsPc".
 
@@ -95,15 +62,14 @@
     100 simultaneous PowerShell jobs.  
 
     .LINK
-    https://git.yale.edu/inf-sa/security-scan
+    https://github.com/jgregmac/Start-FTLDrive
 
     .TODO
-    - Rename to "Invoke-Superluminal", with alias superluminal, isl - Ansible for Windows!
-    - Change to run as a module.
     - Make logging optional
     - Allow custom code blocks from the command line. (auto message formatting?)
+    - Add a function for uniform object creation from the FTL modules?
     - Abstract named scope module, provide sample code.
-    - Put it on GitHub!
+    - Some kind of capability to retry on failed computers?
     #>
     [cmdletbinding()]
     param (
@@ -111,7 +77,7 @@
             #[ValidateSet('Find-EncryptedFiles','Find-IISService','Find-SSHHostKeys','Find-SuspectASPFiles',
             #    'Find-SuspectFileNames','Get-LocalAdministrators','Get-LocalUsers','Get-PSVersion','Restart-HealthService',
             #    'Start-GPUpdate')]
-            [validateScript({Test-Path ('.\SearchModules\' + $_ + '.ps1')})]
+            [validateScript({Test-Path ('.\FTLModules\' + $_ + '.ps1')})]
             [string]$Module,
 
         [parameter(Mandatory=$false)]
@@ -123,10 +89,6 @@
         [Parameter(Mandatory=$False)]
             [int]$timeout = 7200,
 
-        [Parameter(Mandatory=$True,ParameterSetName='scoped')]
-            [ValidateSet('test','dev','prod')]
-            [string]$NamedScope,
-
         [Parameter(Mandatory=$True,ParameterSetName='list',ValueFromPipeline=$true)]
             [string[]]$Computer
     )
@@ -136,7 +98,7 @@
         Set-PSDebug -Strict
         
         #Load the selected search module:
-        $ModulePath = '.\SearchModules\' + $Module + '.ps1'
+        $ModulePath = '.\FTLModules\' + $Module + '.ps1'
 
         ### Initialize Logging:
         $startTime = [datetime]::now
@@ -162,15 +124,6 @@
 
         ### Initialize and populate 'computers' array:
         [string[]]$computers = @()
-        # Populate 'comptuers' when NamedScope parameter is used:
-        if ($NamedScope) {
-            try { Import-Module -name .\ScriptModules\MyOrgComputers.psm1 } catch {
-                Throw "Failed to load the MyOrgComputers.psm1 script module."
-            }
-            write-host "A named scope was provided.  Searching:" $NamedScope
-            $computers = Get-MyOrgComputers -scope $NamedScope
-            Remove-Module MyOrgComputers
-        }
     }
 
     #The 'Process' block is required to capture pipeline input:
@@ -191,7 +144,7 @@
         try {
         
             ### Import required PowerShell Script Modules:
-            try { Import-Module -name .\ScriptMOdules\PSQueue.psm1 } catch {
+            try { Import-Module -name .\SupportModules\PSQueue.psm1 } catch {
                 Throw "Failed to load the PSQueue.psm1 script module."
             }
 
