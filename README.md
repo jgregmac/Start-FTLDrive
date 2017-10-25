@@ -3,6 +3,12 @@ A PowerShell script module for multi-threaded remoting to multiple computers in 
 Developed primarially to allow speedy vulnerability scanning and device reporting, but the modular
 nature of the cmdlet allows for virtually unlimited applications.
 
+"FTLDrive" modules are all PowerShell based.  Anyone with pretty basic PowerShell scripting skills
+should be able to author an FTLDrive module.  No C#, Python, Ruby, or YAML knowledge is required.
+
+This project is in no way associated with Ansible, and is in no way as feature-rich or powerful.
+But Ansible did serve as an inspiration for this work, so props to those guys!
+
 ## Content Highlights:
 ### Start-FTLDrive
 This cmdlet will start an asynchronous search all servers in the test, dev, or prod forests for "interesting things". 
@@ -27,7 +33,7 @@ The script currently takes four arguments:
   This is a Yale-specific scope, and can be targeted at all managed computers
   in one of the PROD, TEST, or DEV Active Directory forests. 
 
-This is intended to be an evloving utility.  In the future, I intend to add more refinements and features:
+This is intended to be an evolving utility.  In the future, I intend to add more refinements and features:
 
 1. Common functions that will be added to the module's script block, possibly used to simplify output. 
 2. Verbose logging options
