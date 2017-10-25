@@ -1,6 +1,8 @@
 ﻿$localHeaders = @('sid','keys')
 
 [scriptblock]$block = {
+    # Currently this script returns nothing other than host output if no keys are found.
+    # Is that desirable?
     Write-Host "Searching for SSH Host keys on: $env:Computername" -ForegroundColor White
 
     [pscustomobject[]]$localKeys = @()
@@ -83,6 +85,6 @@
         }
     }
     if ($localKeys.count -gt 0) {
-        return $localKeys
+        $localKeys
     }
 }
