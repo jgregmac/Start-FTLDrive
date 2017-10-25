@@ -1,4 +1,9 @@
-﻿[scriptblock]$block = {
+﻿<#
+    Name                      State        Function
+    ------                    -------      ----------
+    Start-GPUpdate            Working      Forces a GPUpdate on all computers
+#>
+[scriptblock]$block = {
     #$results = & gpupdate.exe /force 2>&1
     $results = & gpupdate.exe 2>&1
     [string]$message = ''

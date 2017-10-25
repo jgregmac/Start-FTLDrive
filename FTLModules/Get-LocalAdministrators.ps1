@@ -1,4 +1,10 @@
-﻿[scriptblock]$block = {
+﻿<#
+Name                      State        Function
+------                    -------      ----------
+Get-LocalAdministrators   Working      Enumerates all members of the local Administrators 
+                                       security group
+#>
+[scriptblock]$block = {
     $users = @()
     #Run Net.exe to collect the membership of the local administrators group.  Exclude line that do not contain actual results:
     $users = & net.exe localgroup administrators | ? {$_ -notmatch '^Alias name |^Comment |^--|^The command|^Members$|^$'}

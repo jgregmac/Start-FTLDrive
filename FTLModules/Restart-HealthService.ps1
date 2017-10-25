@@ -1,4 +1,10 @@
-﻿[scriptblock]$block = {
+﻿<#
+    Name                      State        Function
+    ------                    -------      ----------
+    Restart-HealthService     Partial      Restarts the SCOM Health Service if it is hung.  Success
+                                           reporting may not be working properyly.
+#>
+[scriptblock]$block = {
     if ((get-service healthservice).status  -eq 'StartPending') {
         $results = & taskkill /IM HealthService.exe /F 2>&1
         $rc = $LASTEXITCODE

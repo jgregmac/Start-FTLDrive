@@ -1,4 +1,11 @@
-﻿$localHeaders = @('sid','keys')
+﻿<#
+    Name                      State        Function
+    ------                    -------      ----------
+    Find-SSHHostKeys          Working      Detects the presence of PuTTY SSHHostKeys registry 
+                                           values on all local users.
+#>
+
+$localHeaders = @('sid','keys')
 
 [scriptblock]$block = {
     # Currently this script returns nothing other than host output if no keys are found.

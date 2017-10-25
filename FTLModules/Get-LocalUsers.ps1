@@ -1,4 +1,9 @@
-﻿[scriptblock]$block = {
+﻿<#
+    Name                      State        Function
+    ------                    -------      ----------
+    Get-LocalUsers            Working      Enumerates all active local user accounts
+#>
+[scriptblock]$block = {
     $cmdOut = @()
     $cmdOut = & net.exe user | ? {$_ -notmatch '^User accounts |^--|^The command|^$'}
     if ($LASTEXITCODE -gt 1) {
