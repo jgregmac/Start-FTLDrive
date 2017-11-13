@@ -156,8 +156,8 @@
 
                 #### Normalize the object to contain all standard headers and module-specific headers:
                 #     (This is required to support Export-CSV, which gets angry if an input object is 
-                #      missing field for a header in the current file.)
-                $queueOut = $_ 
+                #      missing field for a header in the current file.)S
+                $queueOut = $_
                 # Discover properties of the current object in the pipeline:
                 $outProps = $queueOut | Get-Member | Select-Object -ExpandProperty Name
                 # Add any missing headers
@@ -174,7 +174,7 @@
                 }
 
                 #Also send to standard output:
-                $queueOut
+                $queueOut | Select-Object -Property $logHeaders
             }
         } finally { #If the user cancels during this loop, still force module cleanup:
             Remove-Module PSQueue

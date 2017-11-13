@@ -20,7 +20,7 @@
             }
         }
     }
-    New-Object -TypeName PSCustomObject -ArgumentList @{
+    New-Object -TypeName PSCustomObject -Property @{
         computer=$env:COMPUTERNAME;
         status=$status;
         message=$message

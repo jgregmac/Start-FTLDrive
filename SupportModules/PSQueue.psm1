@@ -16,7 +16,8 @@
         $doneJobs | ForEach-Object {
             try {
                 $computer = $_.Location
-                Receive-Job $_ -ea Stop
+                #Cast the job into a PSCustomObject to make attribute retrieval easier (and consistent with error objects, below)
+                [pscustomobject](Receive-Job $_ -ea Stop)
             } catch [System.Management.Automation.RemoteException] {
                 #write-warning "$computer - $_.exception"
                 [pscustomobject]@{

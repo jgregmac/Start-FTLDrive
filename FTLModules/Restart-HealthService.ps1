@@ -20,6 +20,13 @@
         }
         $status = 'success'
         $message = "HealthService started successfully."
+    } else {
+        $status = 'success'
+        $message = 'HealthService is not hung.'
     }
-    New-Object -TypeName PSCustomObject -ArgumentList @{computer=$env:COMPUTERNAME;status=$status;message=$message}
+    New-Object -TypeName PSCustomObject -Property @{
+        computer=$env:COMPUTERNAME;
+        status=$status;
+        message=$message
+    }
 }
